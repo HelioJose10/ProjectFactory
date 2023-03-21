@@ -8,23 +8,42 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/txtCategoria"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/archivo_black"
-        android:gravity="center"
-        android:text="SMART HELMET"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FFFFFF" />
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view5"
-        android:layout_width="wrap_content"
-        android:layout_height="521dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/connors_roundded" />
+
+        <TextView
+            android:id="@+id/txtCategoria"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/archivo_black"
+            android:gravity="center"
+            android:text="SMART HELMET"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#FFFFFF" />
+
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="wrap_content"
+            android:layout_height="557dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/connors_roundded" />
+
+        <View
+            android:id="@+id/circle"
+            android:layout_width="237dp"
+            android:layout_height="225dp"
+            android:layout_marginTop="70dp"
+            android:layout_gravity="top|center"
+            android:background="@drawable/circle" />
+
+
+    </FrameLayout>
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
