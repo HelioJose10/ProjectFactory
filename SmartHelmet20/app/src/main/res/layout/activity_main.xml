@@ -41,6 +41,14 @@
             android:layout_gravity="top|center"
             android:background="@drawable/circle" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="237dp"
+            android:layout_height="225dp"
+            android:layout_marginTop="70dp"
+            android:layout_gravity="top|center"
+            app:srcCompat="@drawable/_156pic" />
+
 
     </FrameLayout>
 
