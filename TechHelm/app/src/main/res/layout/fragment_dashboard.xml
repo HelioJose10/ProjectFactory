@@ -4,35 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".ui.dashboard.DashboardFragment">
 
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="630dp"
-        android:background="@drawable/connors"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
-
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout2"
         android:layout_width="256dp"
         android:layout_height="256dp"
         android:background="@drawable/circle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/BatteryModeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/image"
@@ -43,20 +28,258 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="77dp"
-        android:layout_height="80dp"
-        android:background="@drawable/minicircle"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/NightModeLayout"
+        android:layout_width="93dp"
+        android:layout_height="108dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/connors"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/BatteryModeLayout"
+        app:layout_constraintEnd_toStartOf="@+id/BatteryModeLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+
+        <ImageButton
+            android:id="@+id/imageButton_night"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/connors_button"
+            android:src="@drawable/baseline_nightlight_24"
+            app:layout_constraintBottom_toTopOf="@+id/NightText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/NightText"
+            android:layout_width="72dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="7dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="Night Mode"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButton_night" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/BatteryModeLayout"
+        android:layout_width="93dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/connors"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/MapsModeLayout"
+        app:layout_constraintStart_toEndOf="@+id/NightModeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+
+        <ImageButton
+            android:id="@+id/imageButton_bat"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/connors_button"
+            android:src="@drawable/baseline_battery_charging_full_24"
+            app:layout_constraintBottom_toTopOf="@+id/battText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/battText"
+            android:layout_width="72dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="7dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="Bateria"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageButton_bat" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/MapsModeLayout"
+        android:layout_width="93dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/connors"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/BatteryModeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BatteryModeLayout"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
+
+        <ImageButton
+            android:id="@+id/map_button"
+            android:layout_width="66dp"
+            android:layout_height="63dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/connors_button"
+            android:src="@drawable/baseline_map_24"
+            app:layout_constraintBottom_toTopOf="@+id/MapText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/MapText"
+            android:layout_width="72dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="7dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="Percursos"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/map_button" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="31dp"
+        android:background="#9E9E9E"
+        app:layout_constraintBottom_toTopOf="@+id/textView_def"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BatteryModeLayout" />
+
+    <TextView
+        android:id="@+id/textView_def"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginEnd="289dp"
+        android:layout_marginBottom="25dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Defenições"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="205dp"
+        android:layout_marginBottom="26dp"
+        android:text="SOS"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/textViewInfo"
+        app:layout_constraintEnd_toStartOf="@+id/switch_sos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_def" />
+
+    <Switch
+        android:id="@+id/switch_sos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="77dp"
+        android:text="  "
+        app:layout_constraintBottom_toTopOf="@+id/textViewInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView_def" />
+
+    <TextView
+        android:id="@+id/textViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="169dp"
+        android:text="Alerta SOS em casos de colisão"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="15dp"
+        android:background="#C6C6C6"
+        app:layout_constraintBottom_toTopOf="@+id/textView_speed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
+
+    <TextView
+        android:id="@+id/textView_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="49dp"
+        android:layout_marginEnd="157dp"
+        android:layout_marginBottom="15dp"
+        android:shadowColor="#000000"
+        android:text="Velocidade"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/textView_speed_info"
+        app:layout_constraintEnd_toStartOf="@+id/switch_speed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <Switch
+        android:id="@+id/switch_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginBottom="7dp"
+        android:text="   "
+        app:layout_constraintBottom_toTopOf="@+id/textView_speed_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView_speed"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/textView_speed_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginBottom="59dp"
+        android:text="Alerta quando ultrapassa a velocidade permitida"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.28">
-
-
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/switch_speed" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
