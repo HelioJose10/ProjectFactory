@@ -26,7 +26,7 @@ void loop() {
     Serial.println("connected to server");
     // Make a HTTP request:
     IPAddress ip = WiFi.localIP();
-    String request = "GET /esp32/save_data.php?";
+    String request = "GET rubenpassarinho.pt/ip.txt";
     request += "IP=";
     request += ip;
     request += " HTTP/1.1";
