@@ -27,7 +27,7 @@
             android:id="@+id/profile_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="30dp"
             android:drawableStart="@drawable/baseline_person_4_24"
             android:drawablePadding="10dp"
             android:text="Nome"
@@ -82,14 +82,14 @@
 
         <TextView
             android:id="@+id/profile_subscription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="378dp"
+            android:layout_height="59dp"
             android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
             android:background="@drawable/connors_diamant"
             android:drawableStart="@drawable/baseline_diamond_24"
             android:drawablePadding="10dp"
             android:text="Subscrição Platinum"
-            android:textAlignment="center"
             android:textColor="#fff"
             android:textSize="34sp"
             android:textStyle="bold" />
