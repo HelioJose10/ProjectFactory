@@ -1,10 +1,11 @@
 #include "WiFi.h"
 
-int status;
-const char * ssid = "Visitors";
-const char * password = "";
+const char * ssid = "Vodafone-Africano";
+const char * password = "Africano240311!";
 WiFiClient client;
-char server[] = "10.72.66.195";
+const char * server = "rubenpassarinho.pt";
+const char * resource = "/ip.txt";
+String targetServerIP = ""; // Variable to store the IP
 
 void setup() {
     Serial.begin(115200);
@@ -17,28 +18,33 @@ void setup() {
         }
     }
     printWifiStatus();
-
 }
 
 void loop() {
-  
-  if (client.connect(server, 80)) {
-    Serial.println("connected to server");
-    // Make a HTTP request:
-    IPAddress ip = WiFi.localIP();
-    String request = "GET rubenpassarinho.pt/ip.txt";
-    request += "IP=";
-    request += ip;
-    request += " HTTP/1.1";
-    Serial.println(request);
-    client.println(request);
-    String host = "Host: ";
-    host += server;
-    client.println(host);
-    client.println("Connection: close");
-    client.println();
-  }
-  delay(1000);
+    if (client.connect(server, 80)) {
+        Serial.println("connected to server");
+        // Make a HTTP request:
+        String request = "GET " + String(resource) + " HTTP/1.1\r\nHost: " + String(server) + "\r\nConnection: close\r\n\r\n";
+        client.print(request);
+        delay(1000); // wait for server to respond
+        // Read all the lines of the reply from server and print them to Serial
+        while(client.available()){
+            String line = client.readStringUntil('\r');
+            targetServerIP = line; // Store the IP in the variable
+            Serial.print(line);
+        }
+        client.stop();
+        // Now, connect to the new server
+        if (client.connect(targetServerIP.c_str(), 80)) {
+            Serial.println("connected to target server");
+            // Add your code here to interact with the target server
+        } else {
+            Serial.println("connection to target server failed");
+        }
+    } else {
+        Serial.println("connection failed");
+    }
+    delay(10000); // execute once every 10 seconds, don't flood remote server
 }
 
 void printWifiStatus() {
