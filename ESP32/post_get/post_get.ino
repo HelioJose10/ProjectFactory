@@ -1,11 +1,10 @@
 #include "WiFi.h"
 
-const char * ssid = "Vodafone-Africano";
-const char * password = "Africano240311!";
+const char* ssid = "Vodafone-Africano";
+const char* password = "240311#Africano";
 WiFiClient client;
-const char * server = "rubenpassarinho.pt";
-const char * resource = "/ip.txt";
-String targetServerIP = ""; // Variable to store the IP
+char server[] = "rubenpassarinho.pt";
+char path[] = "/ip.txt";
 
 void setup() {
     Serial.begin(115200);
@@ -21,45 +20,55 @@ void setup() {
 }
 
 void loop() {
+    String ipguardado = "";
     if (client.connect(server, 80)) {
-        Serial.println("connected to server");
-        // Make a HTTP request:
-        String request = "GET " + String(resource) + " HTTP/1.1\r\nHost: " + String(server) + "\r\nConnection: close\r\n\r\n";
-        client.print(request);
-        delay(1000); // wait for server to respond
-        // Read all the lines of the reply from server and print them to Serial
-        while(client.available()){
+        // Make a HTTP GET request:
+        client.print("GET ");
+        client.print(path);
+        client.println(" HTTP/1.1");
+        client.print("Host: ");
+        client.println(server);
+        client.println("Connection: close");
+        client.println();
+
+        while (client.available()) {
             String line = client.readStringUntil('\r');
-            targetServerIP = line; // Store the IP in the variable
-            Serial.print(line);
+            ipguardado += line; // Salva a resposta na variável ipguardado
         }
-        client.stop();
-        // Now, connect to the new server
-        if (client.connect(targetServerIP.c_str(), 80)) {
-            Serial.println("connected to target server");
-            // Add your code here to interact with the target server
+
+        // Agora que temos o IP, podemos fazer a solicitação POST
+        String valor_a_enviar = "5"; // Substitua "algum valor" pelo valor real que deseja enviar
+        if (client.connect(ipguardado.c_str(), 80)) {
+            client.println("POST / HTTP/1.1");
+            client.print("Host: ");
+            client.println(ipguardado);
+            client.println("Content-Type: application/x-www-form-urlencoded");
+            client.print("Content-Length: ");
+            client.println(valor_a_enviar.length());
+            client.println();
+            client.println(valor_a_enviar);
         } else {
-            Serial.println("connection to target server failed");
+            Serial.println("POST request failed");
         }
     } else {
-        Serial.println("connection failed");
+        Serial.println("GET request failed");
     }
-    delay(10000); // execute once every 10 seconds, don't flood remote server
+    delay(1000);
 }
 
 void printWifiStatus() {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+    // print the SSID of the network you're attached to:
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
 
-  // print your WiFi shield's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+    // print your WiFi shield's IP address:
+    IPAddress ip = WiFi.localIP();
+    Serial.print("IP Address: ");
+    Serial.println(ip);
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+    // print the received signal strength:
+    long rssi = WiFi.RSSI();
+    Serial.print("signal strength (RSSI):");
+    Serial.print(rssi);
+    Serial.println(" dBm");
 }
