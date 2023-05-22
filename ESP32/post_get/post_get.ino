@@ -1,5 +1,11 @@
 #include "WiFi.h"
 #include <ArduinoJson.h>
+#include <NewPing.h>  // Inclua a biblioteca NewPing
+
+#define TRIGGER_PIN  5  // Pino GPIO 5 do ESP32 conectado ao pino SIG do sensor
+#define MAX_DISTANCE 200 // Defina a distância máxima que desejamos medir, suponha 200cm
+
+NewPing sonar(TRIGGER_PIN, TRIGGER_PIN, MAX_DISTANCE); // Crie um objeto NewPing.
 
 int status;
 const char *ssid = "Vodafone-Africano";
@@ -74,7 +80,9 @@ void loop() {
 }
 
 void sendPostRequest() {
-    String postData = "5";
+    unsigned int uS = sonar.ping(); // Enviar ping e obter tempo em microssegundos
+    unsigned int distanceCm = uS / US_ROUNDTRIP_CM; // Converte para distância em cm
+    String postData = String(distanceCm); // Converte a distância para string
 
     client.print("POST /?value=" + postData + " HTTP/1.1\r\n");
     client.print("Host: " + String(newIP) + "\r\n");
