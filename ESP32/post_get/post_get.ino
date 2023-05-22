@@ -1,10 +1,13 @@
 #include "WiFi.h"
+#include <ArduinoJson.h>
 
-const char* ssid = "Vodafone-Africano";
-const char* password = "240311#Africano";
+int status;
+const char *ssid = "Vodafone-Africano";
+const char *password = "240311#Africano";
 WiFiClient client;
 char server[] = "rubenpassarinho.pt";
-char path[] = "/ip.txt";
+String newIP = "";
+int port = 6969;
 
 void setup() {
     Serial.begin(115200);
@@ -12,7 +15,7 @@ void setup() {
     WiFi.begin(ssid, password);
     if (WiFi.waitForConnectResult() != WL_CONNECTED) {
         Serial.println("WiFi Failed");
-        while(1) {
+        while (1) {
             delay(1000);
         }
     }
@@ -20,40 +23,67 @@ void setup() {
 }
 
 void loop() {
-    String ipguardado = "";
     if (client.connect(server, 80)) {
-        // Make a HTTP GET request:
-        client.print("GET ");
-        client.print(path);
-        client.println(" HTTP/1.1");
-        client.print("Host: ");
-        client.println(server);
+        Serial.println("connected to server");
+        // Make a HTTP request:
+        IPAddress ip = WiFi.localIP();
+        String request = "GET /ip.txt?";
+        request += "IP=";
+        request += ip;
+        request += " HTTP/1.1";
+        client.println(request);
+        client.println("Host: " + String(server));
         client.println("Connection: close");
         client.println();
 
-        while (client.available()) {
-            String line = client.readStringUntil('\r');
-            ipguardado += line; // Salva a resposta na variável ipguardado
+        // Wait until client is available
+        while (!client.available()) {
+            delay(10);
         }
 
-        // Agora que temos o IP, podemos fazer a solicitação POST
-        String valor_a_enviar = "5"; // Substitua "algum valor" pelo valor real que deseja enviar
-        if (client.connect(ipguardado.c_str(), 80)) {
-            client.println("POST / HTTP/1.1");
-            client.print("Host: ");
-            client.println(ipguardado);
-            client.println("Content-Type: application/x-www-form-urlencoded");
-            client.print("Content-Length: ");
-            client.println(valor_a_enviar.length());
-            client.println();
-            client.println(valor_a_enviar);
+        // Read the response
+        String response;
+        while (client.available()) {
+            response = client.readStringUntil('\n');
+            response.trim(); // trim off trailing whitespace
+        }
+        client.stop(); // close the connection
+
+        // Parse the JSON response to extract the IP address
+        DynamicJsonDocument doc(256);
+        deserializeJson(doc, response);
+        const char* ipAddr = doc["ip"];
+        if (ipAddr != NULL) {
+            newIP = ipAddr;
+            // Successfully extracted the IP address from JSON
+            Serial.println("Received IP: " + newIP);
+            // Connect to the new IP on port 6969
+            if (client.connect(newIP.c_str(), port)) {
+                Serial.println("Successfully connected to: " + newIP);
+                sendPostRequest();
+            } else {
+                Serial.println("Failed to connect to: " + newIP);
+            }
         } else {
-            Serial.println("POST request failed");
+            Serial.println("Failed to extract IP address from JSON: " + response);
         }
     } else {
-        Serial.println("GET request failed");
+        Serial.println("connection failed");
     }
-    delay(1000);
+    delay(30000); // Wait for 30 seconds before next connection attempt
+}
+
+void sendPostRequest() {
+    String postData = "5";
+
+    client.print("POST /?value=" + postData + " HTTP/1.1\r\n");
+    client.print("Host: " + String(newIP) + "\r\n");
+    client.print("Connection: close\r\n");
+    client.print("Content-Type: application/x-www-form-urlencoded\r\n");
+    client.print("Content-Length: 0\r\n");
+    client.print("\r\n");
+
+    Serial.println("POST request sent");
 }
 
 void printWifiStatus() {

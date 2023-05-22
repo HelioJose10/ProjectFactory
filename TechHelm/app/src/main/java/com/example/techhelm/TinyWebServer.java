@@ -35,12 +35,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +52,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  *
@@ -283,59 +288,91 @@ public class TinyWebServer extends Thread {
     public void processLocation(DataOutputStream out, String location, String postData) {
         Log.d(TAG, "processLocation");
         String data = "";
-        switch (location) {
-            case "/":
-                //root location, server index file
-                CONTENT_TYPE = "text/html";
-                data=readFile(WEB_DIR_PATH+"/"+INDEX_FILE_NAME);
-                constructHeader(out, data.length() + "", data);
-                break;
-            default:
 
-                System.out.println("url location -> " + location);
-                URL geturl = getDecodedUrl("http://localhost" + location);
-                String[] dirPath = geturl.getPath().split("/");
-                String fullFilePath=geturl.getPath();
-                if (dirPath.length > 1) {
-                    String fileName = dirPath[dirPath.length - 1];
-                    HashMap qparms = (HashMap) splitQuery(geturl.getQuery());
-                    if(REQUEST_TYPE.equals("POST")){
-                        if (qparms==null){ qparms=new HashMap<String,String>();}
-                        qparms.put("_POST", postData);
-                    }
-                    //System.out.println("File name " + fileName);
-                    //System.out.println("url parms " + qparms);
-                    CONTENT_TYPE = getContentType(fileName);
-                    if(!CONTENT_TYPE.equals("text/plain")){
-                       // System.out.println("Full file path - >"+fullFilePath +" "+CONTENT_TYPE);
+        if (location.equals("/")) {
+            // Root location, server index file
+            CONTENT_TYPE = "text/html";
+            data = readFile(WEB_DIR_PATH + "/" + INDEX_FILE_NAME);
+            constructHeader(out, data.length() + "", data);
+        } else {
+            Log.d(TAG, "url location -> " + location);
 
-                        if(CONTENT_TYPE.equals("image/jpeg") || CONTENT_TYPE.equals("image/png") || CONTENT_TYPE.equals("video/mp4")){
-                           byte[] bytdata=readImageFiles(WEB_DIR_PATH+fullFilePath,CONTENT_TYPE); 
-                           //System.out.println(bytdata.length);
-                           if(bytdata!=null){
-                                constructHeaderImage(out, bytdata.length+"", bytdata);
-                           }else{
-                                 pageNotFound();
-                           }
-                        }else{
-                            data=readFile(WEB_DIR_PATH+fullFilePath);
-                            if(!data.equals("")){
-                                constructHeader(out, data.length() + "", data);
-                            }else{
-                                pageNotFound();
-                            }
-                        }
-                    }else{
-                        data = getResultByName(fileName, qparms);
-                        constructHeader(out, data.length() + "", data);
+            if (location.contains("?value=")) {
+                int startIndex = location.indexOf("=") + 1;
+                postData = location.substring(startIndex);
+
+                Log.d(TAG, "Received value: " + postData);
+            } else {
+                Log.d(TAG, "No value received in location");
+            }
+
+            URL geturl = getDecodedUrl("http://localhost" + location);
+            String[] dirPath = geturl.getPath().split("/");
+            String fullFilePath = geturl.getPath();
+
+            if (dirPath.length > 1) {
+                String fileName = dirPath[dirPath.length - 1];
+                HashMap<String, String> qparms = (HashMap<String, String>) splitQuery(geturl.getQuery());
+
+                if (REQUEST_TYPE.equals("POST")) {
+                    if (qparms == null) {
+                        qparms = new HashMap<String, String>();
                     }
-                    
-                    
+                    qparms.put("_POST", postData);
                 }
 
+                CONTENT_TYPE = getContentType(fileName);
+
+                if (!CONTENT_TYPE.equals("text/plain")) {
+                    if (CONTENT_TYPE.equals("image/jpeg") || CONTENT_TYPE.equals("image/png") || CONTENT_TYPE.equals("video/mp4")) {
+                        byte[] bytdata = readImageFiles(WEB_DIR_PATH + fullFilePath, CONTENT_TYPE);
+                        if (bytdata != null) {
+                            constructHeaderImage(out, bytdata.length + "", bytdata);
+                        } else {
+                            pageNotFound();
+                        }
+                    } else {
+                        data = readFile(WEB_DIR_PATH + fullFilePath);
+                        if (!data.equals("")) {
+                            constructHeader(out, data.length() + "", data);
+                        } else {
+                            pageNotFound();
+                        }
+                    }
+                } else {
+                    data = getResultByName(fileName, qparms);
+                    constructHeader(out, data.length() + "", data);
+                }
+            }
         }
 
+        // Enviar o valor recebido via POST para a URL "https://rubenpassarinho.pt/receberdados.php"
+        try {
+            String encodedValue = URLEncoder.encode(postData, "UTF-8");
+            String urlString = "https://rubenpassarinho.pt/receberdados.php?value=" + encodedValue;
+            URL url = new URL(urlString);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
+                Log.d(TAG, "Valor enviado com sucesso para a URL.");
+            } else {
+                Log.d(TAG, "Erro ao enviar valor para a URL. Código de resposta: " + responseCode);
+            }
+
+            connection.disconnect();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Erro ao enviar valor para a URL: " + e.getMessage());
+        }
     }
+
+
+
+
+
 
     public URL getDecodedUrl(String parms) {
         try {
