@@ -156,8 +156,6 @@ public class TinyWebServer extends Thread {
     private static final String BOUNDARY_REGEX = "[ |\t]*(boundary)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
 
     private static final Pattern BOUNDARY_PATTERN = Pattern.compile(BOUNDARY_REGEX, Pattern.CASE_INSENSITIVE);
-
-    private Context context;
     
     public static String WEB_DIR_PATH="/";
     public static String SERVER_IP="localhost";
@@ -174,9 +172,6 @@ public class TinyWebServer extends Thread {
 
     }
 
-    public TinyWebServer(Context context) {
-        this.context = context;
-    }
 
     @Override
     public void run() {
@@ -353,10 +348,7 @@ public class TinyWebServer extends Thread {
             }
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("postData", postData);
-        editor.apply();
+
 
 
 

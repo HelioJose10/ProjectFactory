@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/navigation_statistics"
-        android:icon="@drawable/pie_chart"
-        android:title="@string/title_statistics" />
+        android:icon="@drawable/baseline_map_24_wh"
+        android:title="Mapa" />
 
     <item
         android:id="@+id/navigation_dashboard"
