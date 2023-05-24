@@ -91,13 +91,11 @@ public class MainActivity extends AppCompatActivity {
         sendPostRequest(context, url, params, new PostResponseListener() {
             @Override
             public void onResponse(String response) {
-                // Faça algo com a resposta do servidor
                 Log.d("Resposta", response);
             }
 
             @Override
             public void onError(String error) {
-                // Faça algo com o erro
                 Log.e("Erro", error);
             }
         });

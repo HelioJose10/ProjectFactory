@@ -23,6 +23,8 @@
  */
 package com.example.techhelm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -154,7 +156,8 @@ public class TinyWebServer extends Thread {
     private static final String BOUNDARY_REGEX = "[ |\t]*(boundary)[ |\t]*=[ |\t]*['|\"]?([^\"^'^;^,]*)['|\"]?";
 
     private static final Pattern BOUNDARY_PATTERN = Pattern.compile(BOUNDARY_REGEX, Pattern.CASE_INSENSITIVE);
-    
+
+    private Context context;
     
     public static String WEB_DIR_PATH="/";
     public static String SERVER_IP="localhost";
@@ -169,6 +172,10 @@ public class TinyWebServer extends Thread {
         serverSocket = new ServerSocket(port, 100, addr);
         serverSocket.setSoTimeout(5000);  //set timeout for listner
 
+    }
+
+    public TinyWebServer(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -345,6 +352,13 @@ public class TinyWebServer extends Thread {
                 }
             }
         }
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("postData", postData);
+        editor.apply();
+
+
 
         // Enviar o valor recebido via POST para a URL "https://rubenpassarinho.pt/receberdados.php"
         try {
