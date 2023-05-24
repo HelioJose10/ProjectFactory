@@ -8,8 +8,8 @@
 NewPing sonar(TRIGGER_PIN, TRIGGER_PIN, MAX_DISTANCE); // Crie um objeto NewPing.
 
 int status;
-const char *ssid = "Vodafone-Africano";
-const char *password = "240311#Africano";
+const char *ssid = "Visitors";
+const char *password = "";
 WiFiClient client;
 char server[] = "rubenpassarinho.pt";
 String newIP = "";
@@ -26,6 +26,7 @@ void setup() {
         }
     }
     printWifiStatus();
+    randomSeed(analogRead(0));
 }
 
 void loop() {
@@ -80,10 +81,12 @@ void loop() {
 }
 
 void sendPostRequest() {
-    unsigned int uS = sonar.ping(); // Enviar ping e obter tempo em microssegundos
-    unsigned int distanceCm = uS / US_ROUNDTRIP_CM; // Converte para distância em cm
+    //unsigned int uS = sonar.ping(); // Enviar ping e obter tempo em microssegundos
+    //unsigned int distanceCm = uS / US_ROUNDTRIP_CM; // Converte para distância em cm
+    //String postData = String(20); // Converte a distância para string
+    int distanceCm = random(1, 201);
     String postData = String(distanceCm); // Converte a distância para string
-
+    Serial.println(distanceCm);
     client.print("POST /?value=" + postData + " HTTP/1.1\r\n");
     client.print("Host: " + String(newIP) + "\r\n");
     client.print("Connection: close\r\n");
