@@ -33,7 +33,7 @@ while ($row = $result->fetch_assoc()) {
 
 if (count($data) > 0) {
     // Retornar os dados como JSON
-    echo json_encode($data);
+    echo json_encode($data, JSON_UNESCAPED_SLASHES);
 } else {
     http_response_code(404); // Not found
     echo json_encode(['error' => 'No data found']);

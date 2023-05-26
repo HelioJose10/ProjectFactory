@@ -1,6 +1,5 @@
 package com.example.techhelm.ui.notifications;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import com.example.techhelm.databinding.FragmentNotificationsBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -29,6 +29,7 @@ public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
     private LinearLayout linearLayout;
+    private LayoutInflater layoutInflater;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        linearLayout = root.findViewById(R.id.linearLayout);
+        layoutInflater = inflater;
+        linearLayout = root.findViewById(R.id.notification_linear_layout);
 
         new FetchDataTask().execute();
 
@@ -71,30 +73,20 @@ public class NotificationsFragment extends Fragment {
             if (jsonArray != null) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
-                        // Create a new LinearLayout to hold each value
-                        LinearLayout itemLayout = new LinearLayout(getActivity());
-                        itemLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                        ));
-                        itemLayout.setOrientation(LinearLayout.VERTICAL);
-                        itemLayout.setPadding(16,16,16,16);
+                        JSONObject object = jsonArray.getJSONObject(i);
 
-                        // Alternate background colors for each layout
-                        int drawableResId = i % 2 == 0 ? R.drawable.rounded_rectangle_white1 : R.drawable.rounded_rectangle_white2;
-                        itemLayout.setBackgroundResource(drawableResId);
+                        View cardView = layoutInflater.inflate(R.layout.card_view_layout, linearLayout, false);
 
-                        // Add a title
-                        TextView title = new TextView(getActivity());
-                        title.setText("Distância");
-                        itemLayout.addView(title);
+                        TextView textViewValue = cardView.findViewById(R.id.text_value);
+                        textViewValue.setText(object.getString("valor") + " cm");
 
-                        // Add the value
-                        TextView textView = new TextView(getActivity());
-                        textView.setText(jsonArray.getJSONObject(i).getString("valor") + " cm");
+                        TextView textViewDate = cardView.findViewById(R.id.text_date);
+                        textViewDate.setText(object.getString("data"));
 
-                        itemLayout.addView(textView);
-                        linearLayout.addView(itemLayout);
+                        TextView textViewTime = cardView.findViewById(R.id.text_time);
+                        textViewTime.setText(object.getString("hora"));
+
+                        linearLayout.addView(cardView);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
