@@ -18,7 +18,7 @@ if ($mysqli->connect_error) {
 }
 
 // Preparar e executar a consulta
-$stmt = $mysqli->prepare("SELECT valor, DATE_FORMAT(hora, '%d/%m/%Y') as data, DATE_FORMAT(hora, '%H:%i') as hora FROM testes WHERE valor > 0");
+$stmt = $mysqli->prepare("SELECT valor, DATE_FORMAT(hora, '%d/%m/%Y') as data, DATE_FORMAT(hora, '%H:%i') as hora FROM distancia WHERE valor > 0");
 $stmt->execute();
 
 // Obter o resultado
@@ -41,4 +41,5 @@ if (count($data) > 0) {
 
 $stmt->close();
 $mysqli->close();
+
 ?>

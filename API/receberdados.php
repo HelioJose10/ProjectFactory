@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
     }
 
     // Prepara a instrução SQL para inserir o valor na tabela
-    $sql = "INSERT INTO testes (valor) VALUES ('$value')";
+    $sql = "INSERT INTO distancia (valor) VALUES ('$value')";
 
     if ($conn->query($sql) === TRUE) {
         echo "Valor inserido com sucesso na tabela.";
@@ -31,4 +31,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
 } else {
     echo "Método não permitido. Apenas requisições POST e GET são aceitas.";
 }
-?>
+
+
