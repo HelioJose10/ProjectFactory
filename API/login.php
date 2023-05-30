@@ -3,10 +3,10 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET");
 
-// Verifique se o ID foi fornecido
-if (!isset($_GET['id'])) {
+// Verifique se o e-mail e a senha foram fornecidos
+if (!isset($_GET['email']) || !isset($_GET['password'])) {
     http_response_code(400); // Bad request
-    echo json_encode(['error' => 'Missing user ID']);
+    echo json_encode(['error' => 'Missing email or password']);
     exit;
 }
 
@@ -25,8 +25,8 @@ if ($mysqli->connect_error) {
 }
 
 // Preparar e executar a consulta
-$stmt = $mysqli->prepare("SELECT * FROM Utilizadores WHERE id = ?");
-$stmt->bind_param("i", $_GET['id']);
+$stmt = $mysqli->prepare("SELECT id FROM Utilizadores WHERE email = ? AND password = ?");
+$stmt->bind_param("ss", $_GET['email'], $_GET['password']);
 $stmt->execute();
 
 // Obter o resultado
@@ -34,11 +34,11 @@ $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
 if ($user) {
-    // Retornar os dados do usuário como JSON
-    echo json_encode($user);
+    // Retornar o ID do usuário como JSON
+    echo json_encode(['id' => $user['id']]);
 } else {
     http_response_code(404); // Not found
-    echo json_encode(['error' => 'User not found']);
+    echo json_encode(['error' => 'Invalid email or password']);
 }
 
 $stmt->close();

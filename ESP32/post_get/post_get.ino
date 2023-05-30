@@ -8,8 +8,8 @@
 NewPing sonar(TRIGGER_PIN, TRIGGER_PIN, MAX_DISTANCE); // Crie um objeto NewPing.
 
 int status;
-const char *ssid = "Visitors";
-const char *password = "";
+const char *ssid = "Vodafone-Africano";
+const char *password = "240311#Africano";
 WiFiClient client;
 char server[] = "rubenpassarinho.pt";
 String newIP = "";
@@ -77,7 +77,7 @@ void loop() {
     } else {
         Serial.println("connection failed");
     }
-    delay(30000); // Wait for 30 seconds before next connection attempt
+     // Wait for 30 seconds before next connection attempt
 }
 
 void sendPostRequest() {

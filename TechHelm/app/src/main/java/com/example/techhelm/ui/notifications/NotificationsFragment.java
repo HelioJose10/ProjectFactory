@@ -30,6 +30,7 @@ public class NotificationsFragment extends Fragment {
     private FragmentNotificationsBinding binding;
     private LinearLayout linearLayout;
     private LayoutInflater layoutInflater;
+    private int userId = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +56,9 @@ public class NotificationsFragment extends Fragment {
         @Override
         protected JSONArray doInBackground(Void... voids) {
             OkHttpClient client = new OkHttpClient();
+            String url = "https://rubenpassarinho.pt/notifications.php?id=" + userId;
             Request request = new Request.Builder()
-                    .url("https://rubenpassarinho.pt/notifications.php")
+                    .url(url)
                     .build();
 
             try (Response response = client.newCall(request).execute()) {

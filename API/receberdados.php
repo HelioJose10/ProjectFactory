@@ -17,8 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
         die("Falha na conexão com o banco de dados: " . $conn->connect_error);
     }
 
-    // Prepara a instrução SQL para inserir o valor na tabela
-    $sql = "INSERT INTO distancia (valor) VALUES ('$value')";
+    // Obtém a hora atual
+    $currentTime = date('Y-m-d H:i:s');
+
+    // Prepara a instrução SQL para inserir o valor, hora atual e o id do utilizador na tabela
+    $sql = "INSERT INTO distancia (id_utilizador, valor, hora) VALUES (3, '$value', '$currentTime')";
 
     if ($conn->query($sql) === TRUE) {
         echo "Valor inserido com sucesso na tabela.";
@@ -33,3 +36,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
 }
 
 
+
+?>
