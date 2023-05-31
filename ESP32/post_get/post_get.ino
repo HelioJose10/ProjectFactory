@@ -77,7 +77,7 @@ void loop() {
     } else {
         Serial.println("connection failed");
     }
-     // Wait for 30 seconds before next connection attempt
+    delay(20000); // Wait for 30 seconds before next connection attempt
 }
 
 void sendPostRequest() {
