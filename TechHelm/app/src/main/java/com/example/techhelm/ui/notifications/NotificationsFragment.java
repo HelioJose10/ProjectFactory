@@ -1,5 +1,4 @@
 package com.example.techhelm.ui.notifications;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.techhelm.R;
+import com.example.techhelm.UserData;
 import com.example.techhelm.databinding.FragmentNotificationsBinding;
 
 import org.json.JSONArray;
@@ -30,7 +30,6 @@ public class NotificationsFragment extends Fragment {
     private FragmentNotificationsBinding binding;
     private LinearLayout linearLayout;
     private LayoutInflater layoutInflater;
-    private int userId = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +40,10 @@ public class NotificationsFragment extends Fragment {
         layoutInflater = inflater;
         linearLayout = root.findViewById(R.id.notification_linear_layout);
 
-        new FetchDataTask().execute();
+        // Obter o valor do userId da variável global
+        int userId = UserData.getInstance().getUserId();
+
+        new FetchDataTask().execute(userId);
 
         return root;
     }
@@ -52,9 +54,11 @@ public class NotificationsFragment extends Fragment {
         binding = null;
     }
 
-    private class FetchDataTask extends AsyncTask<Void, Void, JSONArray> {
+    private class FetchDataTask extends AsyncTask<Integer, Void, JSONArray> {
         @Override
-        protected JSONArray doInBackground(Void... voids) {
+        protected JSONArray doInBackground(Integer... userIds) {
+            int userId = userIds[0];
+
             OkHttpClient client = new OkHttpClient();
             String url = "https://rubenpassarinho.pt/notifications.php?id=" + userId;
             Request request = new Request.Builder()

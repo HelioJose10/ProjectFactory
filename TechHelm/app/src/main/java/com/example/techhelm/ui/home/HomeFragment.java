@@ -1,5 +1,6 @@
 package com.example.techhelm.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.techhelm.UserData;
 import com.example.techhelm.databinding.FragmentHomeBinding;
+import com.example.techhelm.login;
 
 public class HomeFragment extends Fragment {
 
@@ -26,6 +29,12 @@ public class HomeFragment extends Fragment {
 
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        // Redirecionar para LoginActivity e limpar o valor de userId
+        Intent intent = new Intent(getActivity(), login.class);
+        startActivity(intent);
+        UserData.getInstance().setUserId(0);
+
         return root;
     }
 

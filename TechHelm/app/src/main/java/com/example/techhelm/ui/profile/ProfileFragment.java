@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.techhelm.UserData;
 import com.example.techhelm.databinding.FragmentProfileBinding;
+import com.example.techhelm.ui.profile.ProfileViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +27,6 @@ import java.net.URL;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
-    private int userId = 3;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,12 +40,15 @@ public class ProfileFragment extends Fragment {
         TextView textViewEmail = binding.textViewemail;
         TextView textViewCell = binding.textViewcell;
 
-        fetchUserData(textViewName, textViewEmail, textViewCell);
+        // Obter o valor do userId da variável global
+        int userId = UserData.getInstance().getUserId();
+
+        fetchUserData(userId, textViewName, textViewEmail, textViewCell);
 
         return root;
     }
 
-    private void fetchUserData(TextView textViewName, TextView textViewEmail, TextView textViewCell) {
+    private void fetchUserData(int userId, TextView textViewName, TextView textViewEmail, TextView textViewCell) {
         String apiUrl = "https://rubenpassarinho.pt/utilizador.php?id=" + userId;
 
         Thread thread = new Thread(new Runnable() {

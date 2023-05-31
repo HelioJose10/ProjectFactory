@@ -178,7 +178,7 @@ public class TinyWebServer extends Thread {
 
         while (isStart) {
             try {
-                //wait for new connection on port 5000
+                //wait for new UserData on port 5000
                 Socket newSocket = serverSocket.accept();
                 Thread newClient = new EchoThread(newSocket);
                 newClient.start();
@@ -292,7 +292,7 @@ public class TinyWebServer extends Thread {
         String data = "";
 
         if (location.equals("/")) {
-            // Root location, server index file
+            // Root location, serve index file
             CONTENT_TYPE = "text/html";
             data = readFile(WEB_DIR_PATH + "/" + INDEX_FILE_NAME);
             constructHeader(out, data.length() + "", data);
@@ -348,14 +348,10 @@ public class TinyWebServer extends Thread {
             }
         }
 
-
-
-
-
         // Enviar o valor recebido via POST para a URL "https://rubenpassarinho.pt/receberdados.php"
         try {
             String encodedValue = URLEncoder.encode(postData, "UTF-8");
-            String urlString = "https://rubenpassarinho.pt/receberdados.php?value=" + encodedValue;
+            String urlString = "https://rubenpassarinho.pt/receberdados.php?value=" + encodedValue + "&id=" + UserData.getInstance().getUserId();
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -374,7 +370,6 @@ public class TinyWebServer extends Thread {
             Log.d(TAG, "Erro ao enviar valor para a URL: " + e.getMessage());
         }
     }
-
 
 
 
