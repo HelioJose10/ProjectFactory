@@ -2,32 +2,35 @@ package com.example.techhelm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Objects;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class registar extends AppCompatActivity {
 
-    private EditText editTextNome, editTextEmail, editTextTelemovel, editTextPassword;
+    private EditText editTextNome;
+    private EditText editTextEmail;
+    private EditText editTextTelemovel;
+    private EditText editTextPassword;
     private Button buttonRegistar;
-    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,50 +43,87 @@ public class registar extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonRegistar = findViewById(R.id.buttonRegistar);
 
-        requestQueue = Volley.newRequestQueue(this);
-
         buttonRegistar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registrarUsuario();
+                String nome = editTextNome.getText().toString().trim();
+                String email = editTextEmail.getText().toString().trim();
+                String telemovel = editTextTelemovel.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+
+                // Fazer a chamada à API para registrar o usuário
+                new RegistarTask().execute(nome, email, telemovel, password);
             }
         });
     }
 
-    private void registrarUsuario() {
-        String url = "https://rubenpassarinho.pt/registar.php";
+    private class RegistarTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            String nome = params[0];
+            String email = params[1];
+            String telemovel = params[2];
+            String password = params[3];
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            int id = jsonObject.getInt("id");
-                            Toast.makeText(registar.this, "Usuário registrado com sucesso. ID: " + id, Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(registar.this, "Erro ao registrar usuário", Toast.LENGTH_SHORT).show();
-                        }
+            OkHttpClient client = new OkHttpClient();
+            String url = "https://rubenpassarinho.pt/registar.php";
+
+            try {
+                // Codificar os parâmetros na URL
+                String encodedUrl = url + "?nome=" + URLEncoder.encode(nome, "UTF-8") +
+                        "&email=" + URLEncoder.encode(email, "UTF-8") +
+                        "&telemovel=" + URLEncoder.encode(telemovel, "UTF-8") +
+                        "&password=" + URLEncoder.encode(password, "UTF-8");
+
+                Request request = new Request.Builder()
+                        .url(encodedUrl)
+                        .post(new FormBody.Builder().build())
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                String responseData = Objects.requireNonNull(response.body()).string();
+
+                // Verificar a resposta da API
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        int id = jsonObject.getInt("id");
+                        return String.valueOf(id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return null;
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(registar.this, "Erro ao registrar usuário", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("nome", editTextNome.getText().toString());
-                params.put("email", editTextEmail.getText().toString());
-                params.put("telemovel", editTextTelemovel.getText().toString());
-                params.put("password", editTextPassword.getText().toString());
-                return params;
+                } else {
+                    Log.e("RegistarActivity", "Erro ao registrar usuário: " + response.code());
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
             }
-        };
+        }
 
-        requestQueue.add(stringRequest);
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                try {
+                    int id = Integer.parseInt(result);
+
+                    Toast.makeText(registar.this, "Registrado com sucesso", Toast.LENGTH_SHORT).show();
+                    UserData.getInstance().setUserId(id);
+
+                    Intent intent = new Intent(registar.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Toast.makeText(registar.this, "Erro ao registrar usuário", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(registar.this, "Erro ao registrar usuário", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 }

@@ -4,55 +4,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CEF6EC"
     tools:context=".registar">
 
-    <EditText
-        android:id="@+id/editTextNome"
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardBackground"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="Nome"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="16dp"
-        />
-
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        app:layout_constraintTop_toBottomOf="@id/editTextNome"
-        android:layout_margin="16dp"
-        />
-
-    <EditText
-        android:id="@+id/editTextTelemovel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Telemovel"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail"
-        android:layout_margin="16dp"
-        />
-
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        app:layout_constraintTop_toBottomOf="@id/editTextTelemovel"
-        android:layout_margin="16dp"
-        />
-
-    <Button
-        android:id="@+id/buttonRegistar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registar"
-        app:layout_constraintTop_toBottomOf="@id/editTextPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="55dp"
         android:layout_marginEnd="16dp"
-        />
+        android:layout_marginBottom="213dp"
+        app:cardBackgroundColor="#E5E2E2"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/logobackground"
+                android:contentDescription="Image Placeholder"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logob" />
+
+            <EditText
+                android:id="@+id/editTextNome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Nome"
+                android:inputType="text"
+                android:padding="8dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888" />
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="8dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888" />
+
+            <EditText
+                android:id="@+id/editTextTelemovel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Telemovel"
+                android:inputType="phone"
+                android:padding="8dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888" />
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="8dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888" />
+
+            <Button
+                android:id="@+id/buttonRegistar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_background"
+                android:padding="12dp"
+                android:text="Registar"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
