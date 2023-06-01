@@ -8,8 +8,8 @@
 NewPing sonar(TRIGGER_PIN, TRIGGER_PIN, MAX_DISTANCE); // Crie um objeto NewPing.
 
 int status;
-const char *ssid = "Vodafone-Africano";
-const char *password = "240311#Africano";
+const char *ssid = "Visitors";
+const char *password = "";
 WiFiClient client;
 char server[] = "rubenpassarinho.pt";
 String newIP = "";
